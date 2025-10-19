@@ -23,13 +23,13 @@ export const loginUser = (data) =>
 
 export const getProfile = (token) =>
   fetch('/api/user/me', {
-    headers: { Authorization: `Bearer ${token}` },
+    headers: { 'x-auth-token': token },
   }).then(handleRes)
 
 export const updateProfile = (token, data) =>
   fetch('/api/user/me', {
     method: 'PUT',
-    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    headers: { 'Content-Type': 'application/json', 'x-auth-token': token },
     body: JSON.stringify(data),
   }).then(handleRes)
 
