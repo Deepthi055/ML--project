@@ -9,7 +9,24 @@ const User = require("../models/User");
 // @route   POST /api/auth/register
 // @desc    Register user
 router.post("/register", async (req, res) => {
-  const { name, email, password } = req.body;
+  const { 
+    name, 
+    email, 
+    password,
+    age,
+    gender,
+    height_cm,
+    weight_kg,
+    activity_level,
+    goal,
+    target_weight,
+    health_conditions,
+    diet_preferences,
+    daily_calorie_target,
+    carbs_percentage,
+    protein_percentage,
+    fat_percentage
+  } = req.body;
 
   try {
     let user = await User.findOne({ email });
@@ -17,7 +34,34 @@ router.post("/register", async (req, res) => {
       return res.status(400).json({ msg: "User already exists" });
     }
 
-    user = new User({ name, email, password });
+    // Create user object with all fields
+    const userData = {
+      name,
+      email,
+      password,
+      age,
+      gender,
+      height_cm,
+      weight_kg,
+      activity_level,
+      goal,
+      target_weight,
+      health_conditions: health_conditions || [],
+      diet_preferences: diet_preferences || [],
+      daily_calorie_target,
+      carbs_percentage,
+      protein_percentage,
+      fat_percentage
+    };
+
+    // Remove undefined fields
+    Object.keys(userData).forEach(key => {
+      if (userData[key] === undefined) {
+        delete userData[key];
+      }
+    });
+
+    user = new User(userData);
 
     // Hash password
     const salt = await bcrypt.genSalt(10);
