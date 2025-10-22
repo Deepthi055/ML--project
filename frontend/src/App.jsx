@@ -417,7 +417,7 @@ function AuthForm({ onLogin }) {
   )
 }
 
-function Profile({ token, onLogout }) {
+function Profile({ token, onLogout, isHeaderMode = false }) {
   const [profile, setProfile] = useState(null)
   const [editing, setEditing] = useState(false)
   const [form, setForm] = useState({})
@@ -499,17 +499,49 @@ function Profile({ token, onLogout }) {
     if (error) {
       return (
         <div className="profile">
-          <h2>Profile</h2>
           <p className="error">{error}</p>
-          <div style={{ marginTop: 12 }}>
-            <button onClick={onLogout}>Back to login</button>
-          </div>
         </div>
       )
     }
-    return <p>Loading profile...</p>
+    return <p>Loading...</p>
   }
 
+  // Header mode - compact profile icon
+  if (isHeaderMode) {
+    return (
+      <div className="header-profile">
+        <div className="header-profile-icon" onClick={() => setShowProfile(!showProfile)}>
+          <div className="profile-avatar">
+            {profile?.name ? profile.name.charAt(0).toUpperCase() : '👤'}
+          </div>
+          <span className="profile-name">{profile?.name}</span>
+          <span className={`dropdown-arrow ${showProfile ? 'open' : ''}`}>▼</span>
+        </div>
+        
+        {showProfile && (
+          <div className="header-profile-dropdown">
+            <div className="dropdown-header">
+              <p><strong>{profile.name}</strong></p>
+              <p className="dropdown-email">{profile.email}</p>
+            </div>
+            <div className="dropdown-divider"></div>
+            <button className="dropdown-item" onClick={() => { setShowProfile(false); }}>
+              <span>👤</span> View Full Profile
+            </button>
+            <button className="dropdown-item" onClick={() => { setShowProfile(false); }}>
+              <span>⚙️</span> Settings
+            </button>
+            <div className="dropdown-divider"></div>
+            <button className="dropdown-item logout" onClick={onLogout}>
+              <span>🚪</span> Logout
+            </button>
+          </div>
+        )}
+      </div>
+    )
+  }
+
+  // Full profile mode
   return (
     <div className="profile">
       <div className="profile-header">
@@ -662,8 +694,220 @@ function Profile({ token, onLogout }) {
   )
 }
 
+// Dashboard Pages
+function DashboardPage() {
+  return (
+    <div className="page-content">
+      <div className="page-header">
+        <h2>📊 Dashboard</h2>
+        <p className="page-subtitle">Welcome back! Here's your nutrition overview</p>
+      </div>
+      
+      <div className="dashboard-grid">
+        <div className="dashboard-card">
+          <h3>🎯 Today's Goal</h3>
+          <div className="card-content">
+            <p className="big-number">2000 <span className="unit">kcal</span></p>
+            <p className="card-label">Daily Target</p>
+          </div>
+        </div>
+        
+        <div className="dashboard-card">
+          <h3>🔥 Calories Consumed</h3>
+          <div className="card-content">
+            <p className="big-number">1450 <span className="unit">kcal</span></p>
+            <p className="card-label">550 remaining</p>
+          </div>
+        </div>
+        
+        <div className="dashboard-card">
+          <h3>💪 Activity</h3>
+          <div className="card-content">
+            <p className="big-number">350 <span className="unit">kcal</span></p>
+            <p className="card-label">Burned today</p>
+          </div>
+        </div>
+        
+        <div className="dashboard-card">
+          <h3>⚖️ Weight Progress</h3>
+          <div className="card-content">
+            <p className="big-number">-2.5 <span className="unit">kg</span></p>
+            <p className="card-label">This month</p>
+          </div>
+        </div>
+      </div>
+      
+      <div className="dashboard-section">
+        <h3>📈 Nutrient Breakdown</h3>
+        <div className="nutrient-bars">
+          <div className="nutrient-bar">
+            <div className="bar-label">
+              <span>Carbs</span>
+              <span>50%</span>
+            </div>
+            <div className="bar-track">
+              <div className="bar-fill carbs" style={{width: '50%'}}></div>
+            </div>
+          </div>
+          <div className="nutrient-bar">
+            <div className="bar-label">
+              <span>Protein</span>
+              <span>25%</span>
+            </div>
+            <div className="bar-track">
+              <div className="bar-fill protein" style={{width: '25%'}}></div>
+            </div>
+          </div>
+          <div className="nutrient-bar">
+            <div className="bar-label">
+              <span>Fats</span>
+              <span>25%</span>
+            </div>
+            <div className="bar-track">
+              <div className="bar-fill fats" style={{width: '25%'}}></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function MealPlanPage() {
+  return (
+    <div className="page-content">
+      <div className="page-header">
+        <h2>🍽️ Meal Plan Generator</h2>
+        <p className="page-subtitle">AI-powered meal planning tailored to your goals</p>
+      </div>
+      <div className="coming-soon">
+        <p>🚀 Coming Soon!</p>
+        <p className="coming-soon-subtitle">Generate personalized meal plans</p>
+      </div>
+    </div>
+  )
+}
+
+function FoodRecognitionPage() {
+  return (
+    <div className="page-content">
+      <div className="page-header">
+        <h2>📷 Food Recognition</h2>
+        <p className="page-subtitle">Identify food from images using AI</p>
+      </div>
+      <div className="coming-soon">
+        <p>🚀 Coming Soon!</p>
+        <p className="coming-soon-subtitle">Upload or capture food images for instant recognition</p>
+      </div>
+    </div>
+  )
+}
+
+function CalorieEstimationPage() {
+  return (
+    <div className="page-content">
+      <div className="page-header">
+        <h2>🔢 Calorie Estimation</h2>
+        <p className="page-subtitle">Estimate calories and nutrients in your meals</p>
+      </div>
+      <div className="coming-soon">
+        <p>🚀 Coming Soon!</p>
+        <p className="coming-soon-subtitle">Get accurate calorie and nutrient information</p>
+      </div>
+    </div>
+  )
+}
+
+function GroceryListPage() {
+  return (
+    <div className="page-content">
+      <div className="page-header">
+        <h2>🛒 Grocery List</h2>
+        <p className="page-subtitle">Generate shopping lists from your meal plans</p>
+      </div>
+      <div className="coming-soon">
+        <p>🚀 Coming Soon!</p>
+        <p className="coming-soon-subtitle">Smart grocery lists based on your meal plans</p>
+      </div>
+    </div>
+  )
+}
+
+function ChatbotPage() {
+  return (
+    <div className="page-content">
+      <div className="page-header">
+        <h2>💬 Chatbot Assistant</h2>
+        <p className="page-subtitle">Your AI nutrition and meal planning assistant</p>
+      </div>
+      <div className="coming-soon">
+        <p>🚀 Coming Soon!</p>
+        <p className="coming-soon-subtitle">Ask questions about nutrition, recipes, and meal planning</p>
+      </div>
+    </div>
+  )
+}
+
+function NutritionPage() {
+  return (
+    <div className="page-content">
+      <div className="page-header">
+        <h2>🥗 Nutrition Tracker</h2>
+        <p className="page-subtitle">Track your daily nutrition intake</p>
+      </div>
+      <div className="coming-soon">
+        <p>🚀 Coming Soon!</p>
+        <p className="coming-soon-subtitle">Log meals and track your nutrition</p>
+      </div>
+    </div>
+  )
+}
+
+function RecipesPage() {
+  return (
+    <div className="page-content">
+      <div className="page-header">
+        <h2>📖 Recipes</h2>
+        <p className="page-subtitle">Healthy recipes tailored to your goals</p>
+      </div>
+      <div className="coming-soon">
+        <p>🚀 Coming Soon!</p>
+        <p className="coming-soon-subtitle">Discover recipes that match your dietary preferences</p>
+      </div>
+    </div>
+  )
+}
+
+function ProfilePage({ token, onLogout }) {
+  return (
+    <div className="page-content">
+      <div className="page-header">
+        <h2>👤 My Profile</h2>
+        <p className="page-subtitle">Manage your account and preferences</p>
+      </div>
+      <Profile token={token} onLogout={onLogout} isHeaderMode={false} />
+    </div>
+  )
+}
+
+function SettingsPage() {
+  return (
+    <div className="page-content">
+      <div className="page-header">
+        <h2>⚙️ Settings</h2>
+        <p className="page-subtitle">Customize your experience</p>
+      </div>
+      <div className="coming-soon">
+        <p>🚀 Coming Soon!</p>
+        <p className="coming-soon-subtitle">Preferences and account settings</p>
+      </div>
+    </div>
+  )
+}
+
 function App() {
   const [token, setToken] = useState(localStorage.getItem('token'))
+  const [currentPage, setCurrentPage] = useState('dashboard')
 
   const handleLogin = (t) => {
     localStorage.setItem('token', t)
@@ -673,22 +917,114 @@ function App() {
   const handleLogout = () => {
     localStorage.removeItem('token')
     setToken(null)
+    setCurrentPage('dashboard')
   }
 
-  return (
-    <div className="container">
-      <div className="card">
-        <div className="brand">
-          <h1>AI Meal Planner</h1>
-          <p className="lead">Personalized meal planning powered by your profile</p>
-        </div>
-        <div>
-          {!token ? (
+  // If not logged in, show auth form
+  if (!token) {
+    return (
+      <div className="container">
+        <div className="card">
+          <div className="brand">
+            <h1>AI Meal Planner</h1>
+            <p className="lead">Personalized meal planning powered by your profile</p>
+          </div>
+          <div>
             <AuthForm onLogin={handleLogin} />
-          ) : (
-            <Profile token={token} onLogout={handleLogout} />
-          )}
+          </div>
         </div>
+      </div>
+    )
+  }
+
+  // Dashboard layout when logged in
+  return (
+    <div className="dashboard-container">
+      {/* Top Header */}
+      <header className="dashboard-header">
+        <div className="header-left">
+          <h1>🌱 AI Meal Planner</h1>
+        </div>
+        <div className="header-right">
+          <Profile token={token} onLogout={handleLogout} isHeaderMode={true} />
+        </div>
+      </header>
+
+      {/* Main Dashboard */}
+      <div className="dashboard-main">
+        {/* Left Sidebar Navigation */}
+        <aside className="dashboard-sidebar">
+          <nav className="sidebar-nav">
+            <button 
+              className={`nav-item ${currentPage === 'dashboard' ? 'active' : ''}`}
+              onClick={() => setCurrentPage('dashboard')}
+            >
+              <span className="nav-icon">📊</span>
+              <span className="nav-label">Progress Dashboard</span>
+            </button>
+            <button 
+              className={`nav-item ${currentPage === 'food-recognition' ? 'active' : ''}`}
+              onClick={() => setCurrentPage('food-recognition')}
+            >
+              <span className="nav-icon">📷</span>
+              <span className="nav-label">Food Recognition</span>
+            </button>
+            <button 
+              className={`nav-item ${currentPage === 'calorie-estimation' ? 'active' : ''}`}
+              onClick={() => setCurrentPage('calorie-estimation')}
+            >
+              <span className="nav-icon">🔢</span>
+              <span className="nav-label">Calorie Estimation</span>
+            </button>
+            <button 
+              className={`nav-item ${currentPage === 'meal-plan' ? 'active' : ''}`}
+              onClick={() => setCurrentPage('meal-plan')}
+            >
+              <span className="nav-icon">🍽️</span>
+              <span className="nav-label">Meal Plan Generator</span>
+            </button>
+            <button 
+              className={`nav-item ${currentPage === 'grocery-list' ? 'active' : ''}`}
+              onClick={() => setCurrentPage('grocery-list')}
+            >
+              <span className="nav-icon">�</span>
+              <span className="nav-label">Grocery List</span>
+            </button>
+            <button 
+              className={`nav-item ${currentPage === 'chatbot' ? 'active' : ''}`}
+              onClick={() => setCurrentPage('chatbot')}
+            >
+              <span className="nav-icon">💬</span>
+              <span className="nav-label">Chatbot Assistant</span>
+            </button>
+            <button 
+              className={`nav-item ${currentPage === 'profile' ? 'active' : ''}`}
+              onClick={() => setCurrentPage('profile')}
+            >
+              <span className="nav-icon">👤</span>
+              <span className="nav-label">Profile</span>
+            </button>
+            <button 
+              className={`nav-item ${currentPage === 'settings' ? 'active' : ''}`}
+              onClick={() => setCurrentPage('settings')}
+            >
+              <span className="nav-icon">⚙️</span>
+              <span className="nav-label">Settings</span>
+            </button>
+          </nav>
+        </aside>
+
+        {/* Main Content Area */}
+        <main className="dashboard-content">
+          {currentPage === 'dashboard' && <DashboardPage />}
+          {currentPage === 'food-recognition' && <FoodRecognitionPage />}
+          {currentPage === 'calorie-estimation' && <CalorieEstimationPage />}
+          {currentPage === 'meal-plan' && <MealPlanPage />}
+          {currentPage === 'grocery-list' && <GroceryListPage />}
+          {currentPage === 'chatbot' && <ChatbotPage />}
+          {currentPage === 'profile' && <ProfilePage token={token} onLogout={handleLogout} />}
+          {currentPage === 'settings' && <SettingsPage />}
+        </main>
       </div>
     </div>
   )
